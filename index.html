@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <link rel="stylesheet" href="index.css">
+    
+</head>
+<body>
+
+<div class="container">
+
+    <h1>✨ My ToDo</h1>
+
+    <div class="input-box">
+        <input
+            type="text"
+            id="taskInput"
+            placeholder="What needs to be done?"
+        >
+
+        <button id="addBtn">
+            Add
+        </button>
+    </div>
+    
+    <div class="stats">
+
+        <div class="card">
+            <h2 id="totalTasks">0</h2>
+            <p>Total</p>
+        </div>
+
+        <div class="card">
+            <h2 id="completedTasks">0</h2>
+            <p>Completed</p>
+        </div>
+
+        <div class="card">
+            <h2 id="remainingTasks">0</h2>
+            <p>Remaining</p>
+        </div>
+
+    </div>
+
+    <div class="filters">
+
+        <button class="filter active">
+            All
+        </button>
+
+        <button id = "id101" class="filter">
+            Active
+        </button>
+
+        <button id = "id102" class="filter">
+            Completed
+        </button>
+
+        <button id="clearCompleted">
+            Clear Completed
+        </button>
+
+    </div>
+
+    <ul id="taskList">
+        <!-- Create this structure dynamically -->
+
+        <!-- <li>
+
+            <div class="task-left">
+
+                <input type="checkbox">
+
+                <span>Learn JavaScript</span>
+
+            </div>
+
+            <div class="actions">
+
+                <button>Edit</button>
+
+                <button>Delete</button>
+
+            </div>
+
+        </li> -->
+
+    </ul>
+
+</div>
+
+</body>
+<script src="index.js"></script>
+</html>
