@@ -107,3 +107,68 @@ list.addEventListener('click', (e)=>{
   }
   saveTasks();
 });
+
+//update total tasks count
+
+function updateTotal(completedCount){
+  completedTasks.textContent = completedCount;
+  remainingCount = totalCount-completedCount;
+  remainingTasks.textContent = remainingCount;
+}
+
+//categories of tasks
+let active = document.querySelector("#id101");
+let completed = document.querySelector("#id102");
+let all = document.querySelector(".active");
+let clearComplete = document.querySelector("#clearCompleted");
+
+//functionalities of categories
+active.addEventListener('click', ()=>{
+  retrive();
+  let temp = list;
+  for(let item of temp.children){
+    if(item.firstChild.firstChild.checked){
+      item.style.display = "none";
+    }
+  }
+});
+
+all.addEventListener('click', ()=>{
+ retrive();
+});
+
+completed.addEventListener('click', ()=>{
+  retrive();
+  let temp1 = list;
+  for(let item of temp1.children){
+    if(!item.firstChild.firstChild.checked){
+      item.style.display = "none";
+    }
+  }
+  saveTasks();
+});
+
+clearComplete.addEventListener('click', ()=>{
+  let count = 0;
+  retrive();
+  let temp = list;
+  for(let item of [...temp.children]){
+    if(item.firstChild.firstChild.checked){
+      item.remove();
+      count+=1;
+    }
+  }
+  totalCount-=count;
+  totalTasks.textContent = totalCount;
+  updateTotal(completedCount-= count);
+  saveTasks();
+})
+
+
+function retrive(){
+  for(let item of list.children){
+    item.style.display = "flex";
+  }
+}
+
+
