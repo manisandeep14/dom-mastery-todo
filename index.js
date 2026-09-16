@@ -11,9 +11,12 @@ const allFilterBtn = document.querySelector(".filter.active");
 const activeFilterBtn = document.querySelector("#id101");
 const completedFilterBtn = document.querySelector("#id102");
 const clearCompleteBtn = document.querySelector("#clearCompleted");
+const themeToggleBtn = document.getElementById("themeToggle");
+const resetStorageBtn = document.getElementById("resetStorageBtn");
 
 let tasks = [];
 let currentFilter = "all";
+let draggedTaskId = null;
 
 function generateTaskId() {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -88,6 +91,7 @@ function createTaskElement(task) {
   const li = document.createElement("li");
   li.classList.add("li-st");
   li.dataset.id = task.id;
+  li.draggable = true;
 
   if (task.complete) {
     li.classList.add("completed");
@@ -118,6 +122,12 @@ function createTaskElement(task) {
   li.append(divLeft, actions);
 
   return li;
+}
+
+function applyTheme() {
+  const isDarkMode = localStorage.getItem("themeMode") === "dark";
+  document.body.classList.toggle("dark-mode", isDarkMode);
+  themeToggleBtn.textContent = isDarkMode ? "☀️ Light mode" : "🌙 Dark mode";
 }
 
 function renderTasks() {
@@ -201,6 +211,62 @@ list.addEventListener("click", (event) => {
   }
 });
 
+list.addEventListener("dragstart", (event) => {
+  const taskItem = event.target.closest(".li-st");
+  if (!taskItem) return;
+
+  draggedTaskId = taskItem.dataset.id;
+  taskItem.classList.add("dragging");
+  event.dataTransfer.effectAllowed = "move";
+});
+
+list.addEventListener("dragover", (event) => {
+  const dropTarget = event.target.closest(".li-st");
+  if (!dropTarget) return;
+
+  event.preventDefault();
+  dropTarget.classList.add("drag-over");
+});
+
+list.addEventListener("dragleave", (event) => {
+  const dropTarget = event.target.closest(".li-st");
+  if (dropTarget) {
+    dropTarget.classList.remove("drag-over");
+  }
+});
+
+list.addEventListener("drop", (event) => {
+  const dropTarget = event.target.closest(".li-st");
+  if (!dropTarget || !draggedTaskId) return;
+
+  event.preventDefault();
+  dropTarget.classList.remove("drag-over");
+
+  const fromIndex = tasks.findIndex((task) => task.id === draggedTaskId);
+  const toIndex = tasks.findIndex((task) => task.id === dropTarget.dataset.id);
+
+  if (fromIndex === -1 || toIndex === -1 || fromIndex === toIndex) {
+    draggedTaskId = null;
+    return;
+  }
+
+  const [movedTask] = tasks.splice(fromIndex, 1);
+  tasks.splice(toIndex, 0, movedTask);
+  saveTasks();
+  renderTasks();
+  draggedTaskId = null;
+});
+
+list.addEventListener("dragend", (event) => {
+  const taskItem = event.target.closest(".li-st");
+  if (taskItem) {
+    taskItem.classList.remove("dragging");
+  }
+
+  list.querySelectorAll(".li-st").forEach((item) => item.classList.remove("drag-over"));
+  draggedTaskId = null;
+});
+
 allFilterBtn.addEventListener("click", () => {
   currentFilter = "all";
   setActiveFilter(allFilterBtn);
@@ -225,13 +291,30 @@ clearCompleteBtn.addEventListener("click", () => {
   renderTasks();
 });
 
-title.addEventListener("click", () => {
-  if (confirm("Are you sure you want to clear all tasks?")) {
+resetStorageBtn.addEventListener("click", () => {
+  if (confirm("Are you sure you want to reset all saved tasks?")) {
     tasks = [];
-    localStorage.clear();
+    localStorage.removeItem("myTasks");
+    localStorage.removeItem("tasksUpdate");
     renderTasks();
   }
 });
 
+themeToggleBtn.addEventListener("click", () => {
+  const isDarkMode = document.body.classList.toggle("dark-mode");
+  localStorage.setItem("themeMode", isDarkMode ? "dark" : "light");
+  themeToggleBtn.textContent = isDarkMode ? "☀️ Light mode" : "🌙 Dark mode";
+});
+
+title.addEventListener("click", () => {
+  if (confirm("Are you sure you want to clear all tasks?")) {
+    tasks = [];
+    localStorage.removeItem("myTasks");
+    localStorage.removeItem("tasksUpdate");
+    renderTasks();
+  }
+});
+
+applyTheme();
 tasks = readTasks();
 renderTasks();
