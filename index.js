@@ -12,6 +12,59 @@ let completedCount = 0;
 let remainingCount = 0;
 
 
+//rendring the tasks on page load
+
+let score = {
+  tCount : 0,
+  cCount : 0,
+  rCount : 0
+};
+
+let arr = renderTasks();
+
+
+arr.forEach(taskObj => {
+
+    let ele = document.createElement("li");
+    ele.classList.add("li-st");
+
+    if(taskObj.complete){
+        ele.classList.add("completed");
+    }
+
+    list.append(ele);
+
+    let div2 = document.createElement("div");
+    div2.classList.add("task-left");
+    ele.append(div2);
+
+    let checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = taskObj.complete;
+
+    div2.append(checkbox);
+
+    let span = document.createElement("span");
+    span.textContent = taskObj.task;
+
+    div2.append(span);
+
+    let div1 = document.createElement("div");
+    div1.classList.add("actions");
+    ele.append(div1);
+
+    let deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+
+    let editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+
+    div1.append(deleteBtn);
+    div1.append(editBtn);
+
+});
+
+
 function addTodo(){
   if(input.value != ""){
     let ele = document.createElement("li");
@@ -171,4 +224,34 @@ function retrive(){
   }
 }
 
+//local storage functions
+function renderTasks(){
+  let scoreC = JSON.parse(localStorage.getItem("tasksUpdate"));
+  if(scoreC){
+    totalCount = scoreC.tCount;
+    completedCount = scoreC.cCount;
+    remainingCount = scoreC.rCount;
+ 
+    totalTasks.textContent = totalCount;
+    completedTasks.textContent = completedCount;
+    remainingTasks.textContent = remainingCount;
+  }
+  return JSON.parse(localStorage.getItem("myTasks")) || [];
+}
 
+function saveTasks(){
+  arr = [];
+  for(let item of list.children){
+    arr.push({task : item.querySelector('span').innerText,
+              complete : item.querySelector('input').checked
+    });
+  }
+  score = {
+    tCount : totalCount,
+    cCount : completedCount,
+    rCount : remainingCount
+  };
+
+  localStorage.setItem("tasksUpdate", JSON.stringify(score));
+  localStorage.setItem("myTasks",JSON.stringify(arr));
+}
