@@ -64,3 +64,46 @@ input.addEventListener('keydown', (e)=>{
   }
 });
 
+
+//To delete To Edit task
+list.addEventListener('click', (e)=>{
+  const task = e.target.closest('.li-st');
+  if(e.target.textContent === "Delete"){
+    const isCompleted = task.querySelector('input').checked;
+    task.remove();
+    totalCount-=1;
+    totalTasks.textContent = totalCount;
+ 
+    if(isCompleted){
+      updateTotal(completedCount-=1);
+    }else{
+      updateTotal(completedCount -= 0);
+    }
+  }
+  else if(e.target.textContent === "Edit"){
+    let par = task;
+    while(true){
+      let valueInput = prompt("Update your task");
+      if(valueInput !== null){
+        if(valueInput !== ""){
+            par.querySelector('span').textContent = valueInput;
+            alert("Task Modified");
+          break;
+        }
+      }else{
+        break;
+      }
+    }
+  }
+  else if(e.target.tagName === "INPUT"){
+    let newCls = task;
+    if(e.target.checked){
+      newCls.classList.add("completed");
+      updateTotal(completedCount+=1);
+    }else if(!e.target.checked){
+      newCls.classList.remove("completed");
+      updateTotal(completedCount-=1);
+    }
+  }
+  saveTasks();
+});
