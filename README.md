@@ -6,18 +6,6 @@ This project was created to practice core frontend development concepts includin
 
 ---
 
-## 🚀 Live Demo
-
-(Add GitHub Pages link here after deployment)
-
----
-
-## 📸 Screenshot
-
-(Add project screenshot here)
-
----
-
 ## ✨ Features
 
 ### Task Management
@@ -52,7 +40,6 @@ This project was created to practice core frontend development concepts includin
 - Responsive UI
 - Completed task styling
 
----
 
 ## 🛠️ Technologies Used
 
@@ -60,15 +47,4 @@ This project was created to practice core frontend development concepts includin
 - CSS3
 - JavaScript (ES6)
 
----
 
-## 📚 Concepts Practiced
-
-### DOM Manipulation
-
-```javascript
-document.querySelector()
-document.getElementById()
-document.createElement()
-append()
-classList.add()
